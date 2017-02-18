@@ -8,7 +8,8 @@ var request = require('request');
 // move to environment setting after initial testing
 var collectionUrl = process.env.API_URL;
 var token = process.env.API_TOKEN;
-
+var auth, url, issueCreationUrl;
+auth = 'Basic ' + new Buffer(token).toString('base64');
 
 
 // Setup Restify Server
@@ -47,7 +48,7 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     })
      .matches('userfacingissue',[
         function (session, args) {
-            session.send('I think you want to create a work item'); 
+            session.send('Are you facing an issue and want to create an issue?'); 
             builder.Prompts.choice(session, 'Please select one of the choices', ['yes','no']);
             
         },
@@ -64,12 +65,7 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 
             }
 
-        } ,      
-        function (session, result) {
-            var ticketNumber = result.response;
-            session.send("Your ticket number is %s", ticketNumber);
-            session.endDialog();
-        }
+        } 
     ])
        
     
@@ -80,19 +76,33 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 
 bot.dialog('/', intents);
 
-bot.dialog('/raiseTicket', function (session) {
-    var tickerNumber = Math.ceil(Math.random() * 20000);
-    session.endDialogWithResult({
-        response: tickerNumber
-    });
-});
+bot.dialog('/raiseTicket', [
+    function (session, args, next) {
+         builder.Prompts.text(session, 'Please Enter the Title of the issue you want to create?');
+    },
+    function (session, args) {
+    // var tickerNumber = Math.ceil(Math.random() * 20000);
+    var issueId;
+     if (args.response) {
+            // issueId = 
+            createIssue(session, args.response);
+            
+        }
+
+    // /  session.endDialog();   
+    // session.endDialogWithResult({
+    //     response: issueId
+    // });
+}
+]
+);
 
 function getItemDetails(session, taskid) {
-var auth, url;
+
 
 url = collectionUrl + "/DefaultCollection/_apis/wit/workItems/" + taskid;
 
-auth = 'Basic ' + new Buffer(token).toString('base64');
+
 
 request.get({
   url: url,
@@ -104,10 +114,11 @@ request.get({
   body = body.replace("System.TeamProject", "TeamProject");
   body = body.replace("System.State", "State");
   body = body.replace("System.CreatedBy", "CreatedBy");
+  body = body.replace("System.Title", "Title");
   json = JSON.parse(body);
   if (json.fields !== void 0) {
-    console.log("   <b>Task</b>: " + json.id + "\n Team Project Name: " + json.fields.TeamProject + "\n");
-    session.send(" *Task* : " + json.id + ", *State*: " + json.fields.State + "\n *Project Name*: " + json.fields.TeamProject + ", *Created By*: " + json.fields.CreatedBy + "\n");
+    console.log("   *Task: " + json.id + "\n ** Title: <" + decodeURIComponent(json.fields.Title) + ">\n");
+    session.send(" *Task* : " + json.id + ", *State*: " + json.fields.State + "\n *Title*: '" + decodeURIComponent(json.fields.Title) + "', *Created By*: " + json.fields.CreatedBy + "\n");
     session.send(" You can View / Edit this Task by clicking on the link : " + collectionUrl + "/DefaultCollection/" + (encodeURI(json.fields.TeamProject)) + "/_workitems/edit/" + taskid + "\n");
   } else {
     return session.send(">>> *No Task with Id '" + taskid + "' exists in the configured visual studio team services account*");
@@ -117,4 +128,25 @@ request.get({
 
 // Helpers
 
+function createIssue(session, title){
+issueCreationUrl = collectionUrl + "/DefaultCollection/" + process.env.API_PROJECT + "/_apis/wit/workItems/$Issue?api-version=1.0";
 
+request.patch({
+  url: issueCreationUrl,
+  headers: {
+    'Content-Type': 'application/json-patch+json',
+    'Authorization': auth
+  },
+  body: "[ {    'op': 'add', 'path': '/fields/System.Title', 'value': '" + title + "' }]"
+}, function(error, response, body) {
+  var json;
+  json = JSON.parse(body);
+  if (json.id !== void 0) {
+    session.send("New issue created. Issue Id: "+ json.id);
+    // return json.id;
+  }
+  session.endDialog();
+});
+ 
+
+}
