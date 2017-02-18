@@ -1,0 +1,21 @@
+{
+  "name": "vstsbot",
+  "version": "1.0.0",
+  "description": "VSTS Bot",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/username/repository.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "botbuilder": "^3.2.3",
+    "request": "^2.75.0",
+    "restify": "^4.1.1",
+    "vso-node-api": "^5.1.2"
+  }
+}

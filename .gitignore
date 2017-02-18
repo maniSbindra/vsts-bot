@@ -1,0 +1,7 @@
+.env
+.vscode
+node_modules/
+**/launch.json
+/.vscode/**
+setenv.sh
+azuredeploy.json
