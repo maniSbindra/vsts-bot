@@ -1,0 +1,125 @@
+{
+  "luis_schema_version": "1.3.1",
+  "versionId": "0.1",
+  "name": "vsts-bot",
+  "desc": "",
+  "culture": "en-us",
+  "intents": [
+    {
+      "name": "executebuild"
+    },
+    {
+      "name": "getticketdetails"
+    },
+    {
+      "name": "greeting"
+    },
+    {
+      "name": "None"
+    },
+    {
+      "name": "userfacingissue"
+    }
+  ],
+  "entities": [],
+  "composites": [],
+  "closedLists": [],
+  "bing_entities": [
+    "number"
+  ],
+  "actions": [],
+  "model_features": [],
+  "regex_features": [],
+  "utterances": [
+    {
+      "text": "hi",
+      "intent": "greeting",
+      "entities": []
+    },
+    {
+      "text": "hello",
+      "intent": "greeting",
+      "entities": []
+    },
+    {
+      "text": "hi there",
+      "intent": "greeting",
+      "entities": []
+    },
+    {
+      "text": "hey",
+      "intent": "greeting",
+      "entities": []
+    },
+    {
+      "text": "can you give me details of task 113",
+      "intent": "getticketdetails",
+      "entities": []
+    },
+    {
+      "text": "show me details of work item 345",
+      "intent": "getticketdetails",
+      "entities": []
+    },
+    {
+      "text": "i need to view item 6",
+      "intent": "getticketdetails",
+      "entities": []
+    },
+    {
+      "text": "show task 12",
+      "intent": "getticketdetails",
+      "entities": []
+    },
+    {
+      "text": "show issue 24",
+      "intent": "getticketdetails",
+      "entities": []
+    },
+    {
+      "text": "execute build 4",
+      "intent": "executebuild",
+      "entities": []
+    },
+    {
+      "text": "please run build 4",
+      "intent": "executebuild",
+      "entities": []
+    },
+    {
+      "text": "i want to run build 3",
+      "intent": "executebuild",
+      "entities": []
+    },
+    {
+      "text": "i am having an issue with task 123",
+      "intent": "userfacingissue",
+      "entities": []
+    },
+    {
+      "text": "there is an error in the application",
+      "intent": "userfacingissue",
+      "entities": []
+    },
+    {
+      "text": "the index page is throwing an error",
+      "intent": "userfacingissue",
+      "entities": []
+    },
+    {
+      "text": "the page is taking too long to load",
+      "intent": "userfacingissue",
+      "entities": []
+    },
+    {
+      "text": "there is an issue with the homepage",
+      "intent": "userfacingissue",
+      "entities": []
+    },
+    {
+      "text": "outlook is not working",
+      "intent": "userfacingissue",
+      "entities": []
+    }
+  ]
+}

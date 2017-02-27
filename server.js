@@ -5,10 +5,13 @@ var request = require('request');
 
 // setup vsts
 // your collection url
-// move to environment setting after initial testing
 var collectionUrl = process.env.API_URL;
+
+// The unencoded http basic authentication token 
 var token = process.env.API_TOKEN;
 var auth, url, issueCreationUrl;
+
+// The authorization header value which will be set in the request
 auth = 'Basic ' + new Buffer(token).toString('base64');
 
 
@@ -33,19 +36,27 @@ const LuisModelUrl = process.env.LUIS_MODEL_URL;
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
+
+  // If User greeted the bot
   .matches('greeting', (session, args) => {
     session.send('Hi There');
   })
+
+  // If User wants to get details of issue
   .matches('getticketdetails', (session, args) => {
     //    session.send('So you want details of a ticket');
     var taskNumber = builder.EntityRecognizer.findEntity(args.entities, 'builtin.number');
     getItemDetails(session, taskNumber.entity);
 
   })
-  .matches('executebuild', (session, args) => {
-    session.send('so you want to execute a build');
 
+  // If user wants to execute a build
+  .matches('executebuild', (session, args) => {
+    session.send('This functionality is currently under development....');
+    // To Do trigger VSTS build
   })
+
+  // If user facing issue, and wants to raise ticket
   .matches('userfacingissue', [
     function (session, args) {
       session.send('Are you facing an issue and want to create an issue?');
@@ -118,7 +129,6 @@ function getItemDetails(session, taskid) {
 }
 
 
-
 // creates an issue in vsts and sends id of the created issue to the channel
 function createIssue(session, title) {
   issueCreationUrl = collectionUrl + "/DefaultCollection/" + process.env.API_PROJECT + "/_apis/wit/workItems/$Issue?api-version=1.0";
@@ -142,3 +152,5 @@ function createIssue(session, title) {
 
 
 }
+
+
