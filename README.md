@@ -15,3 +15,5 @@
 
 ### app.js is the entry point of the application
 ### vsts-bot-LUIS-model.json is the LUIS Model to recognize intents and entities associated with this application. This model can be imported when creating your application at luis.ai
+
+## The post [https://blogs.msdn.microsoft.com/manibindra/2017/02/27/integrating-vsts-with-different-communication-channels-slack-skype-etc-using-botframework-and-luis/](https://blogs.msdn.microsoft.com/manibindra/2017/02/27/integrating-vsts-with-different-communication-channels-slack-skype-etc-using-botframework-and-luis/) gives more details on this solution.
